@@ -5,19 +5,19 @@ A Multi-Level Approval Workflow Engine and Centralized Governance Platform built
 ---
 
 ## 📑 Table of Contents
-1. [Key Capabilities & Domain Features](#-key-capabilities--domain-features)
-2. [Project & Folder Structure](#-project--folder-structure)
-3. [Step-by-Step Installation & Setup](#-step-by-step-installation--setup)
-4. [Database Initialization & .env Encryption](#-database-env-password-encryption)
-5. [API Documentation (Swagger OpenAPI)](#-api-documentation-swagger-openapi)
-6. [Postman Collection Guide](#-postman-collection-guide)
-7. [How to Configure Approval Workflows in the UI](#-how-to-configure-approval-workflows-in-the-ui)
-8. [Integrating 3rd-Party Applications as a Centralized Approval Hub](#-integrating-3rd-party-applications-as-a-centralized-approval-hub)
-9. [Automated Unit Testing & Quality Assurance](#-automated-unit-testing--quality-assurance)
+1. [Key Capabilities & Domain Features](#1-key-capabilities--domain-features)
+2. [Project & Folder Structure](#2-project--folder-structure)
+3. [Step-by-Step Installation & Setup](#3-step-by-step-installation--setup)
+4. [Database .env Password Encryption](#4-database-env-password-encryption)
+5. [API Documentation (Swagger OpenAPI)](#5-api-documentation-swagger-openapi)
+6. [Postman Collection Guide](#6-postman-collection-guide)
+7. [How to Configure Approval Workflows in the UI](#7-how-to-configure-approval-workflows-in-the-ui)
+8. [Integrating 3rd-Party Applications as a Centralized Approval Hub](#8-integrating-3rd-party-applications-as-a-centralized-approval-hub)
+9. [Automated Unit Testing & Quality Assurance](#9-automated-unit-testing--quality-assurance)
 
 ---
 
-## 🌟 Key Capabilities & Domain Features
+## <a id="1-key-capabilities--domain-features"></a> 🌟 1. Key Capabilities & Domain Features
 
 ### 1. 👥 Dynamic RBAC & Full Name Identity
 - **Roles**: `Admin`, `Direktur`, `Head of Division`, `Manager`, `Leader`, `Staff`.
@@ -49,7 +49,7 @@ A Multi-Level Approval Workflow Engine and Centralized Governance Platform built
 
 ---
 
-## 📁 Project & Folder Structure
+## <a id="2-project--folder-structure"></a> 📁 2. Project & Folder Structure
 
 ```
 approval-workflow/
@@ -116,7 +116,7 @@ approval-workflow/
 
 ---
 
-## 🛠️ Step-by-Step Installation & Setup
+## <a id="3-step-by-step-installation--setup"></a> 🛠️ 3. Step-by-Step Installation & Setup
 
 ### Prerequisites
 - **Node.js**: `v18.x` or `v20.x`
@@ -183,7 +183,7 @@ All default accounts share the password: **`Admin@123`**
 
 ---
 
-## 🔐 Database .env Password Encryption
+## <a id="4-database-env-password-encryption"></a> 🔐 4. Database .env Password Encryption
 
 Database passwords in `backend/.env` are encrypted using **AES-256-GCM**.
 
@@ -200,7 +200,7 @@ node scripts/crypto-cli.js decrypt enc:434a3e2bf8d9f748209612913e4f39b5:137d12f7
 
 ---
 
-## 📖 API Documentation (Swagger OpenAPI)
+## <a id="5-api-documentation-swagger-openapi"></a> 📖 5. API Documentation (Swagger OpenAPI)
 
 Interactive Swagger API documentation is available at:
 👉 **`http://localhost:3000/api/docs`**
@@ -211,7 +211,7 @@ Interactive Swagger API documentation is available at:
 
 ---
 
-## 📮 Postman Collection Guide
+## <a id="6-postman-collection-guide"></a> 📮 6. Postman Collection Guide
 
 The complete Postman Collection is located at:
 📁 **`database/Approval_Workflow_API.postman_collection.json`**
@@ -233,7 +233,7 @@ The complete Postman Collection is located at:
 
 ---
 
-## 🖥️ How to Configure Approval Workflows in the UI
+## <a id="7-how-to-configure-approval-workflows-in-the-ui"></a> 🖥️ 7. How to Configure Approval Workflows in the UI
 
 1. Log in as an **Admin** user (e.g. `admin` / `Admin@123`).
 2. Navigate to **Approval Flows** in the sidebar.
@@ -246,7 +246,7 @@ The complete Postman Collection is located at:
 
 ---
 
-## 🔌 Integrating 3rd-Party Applications as a Centralized Approval Hub
+## <a id="8-integrating-3rd-party-applications-as-a-centralized-approval-hub"></a> 🔌 8. Integrating 3rd-Party Applications as a Centralized Approval Hub
 
 External systems (such as ERP, HRIS, Procurement, or CRM applications) can use this platform as their **Centralized Approval Authority**.
 
@@ -373,7 +373,7 @@ Content-Type: application/json
 
 ---
 
-## 🧪 Automated Unit Testing & Quality Assurance
+## <a id="9-automated-unit-testing--quality-assurance"></a> 🧪 9. Automated Unit Testing & Quality Assurance
 
 The test suite covers 100% of domain modules with **33 automated unit test cases**.
 
