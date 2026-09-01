@@ -8,7 +8,7 @@ A Multi-Level Approval Workflow Engine and Centralized Governance Platform built
 1. [Key Capabilities & Domain Features](#-key-capabilities--domain-features)
 2. [Project & Folder Structure](#-project--folder-structure)
 3. [Step-by-Step Installation & Setup](#-step-by-step-installation--setup)
-4. [Database Initialization & .env Encryption](#-database-initialization---env-encryption)
+4. [Database Initialization & .env Encryption](#-database-env-password-encryption)
 5. [API Documentation (Swagger OpenAPI)](#-api-documentation-swagger-openapi)
 6. [Postman Collection Guide](#-postman-collection-guide)
 7. [How to Configure Approval Workflows in the UI](#-how-to-configure-approval-workflows-in-the-ui)
