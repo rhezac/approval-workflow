@@ -1,0 +1,18 @@
+{
+  "divisions": [
+    { "id": "IT", "name": "IT", "description": "Information Technology Division" },
+    { "id": "Finance", "name": "Finance", "description": "Finance & Accounting Division" },
+    { "id": "Business", "name": "Business", "description": "Business Development & Operations" },
+    { "id": "Operation", "name": "Operation", "description": "Operation Development & Operations" },
+    { "id": "HR", "name": "Human Resources", "description": "HR Development & Operations" },
+    { "id": "Corcom", "name": "Corporate Communication", "description": "Corporate Communication" }
+  ],
+  "roles": [
+    { "id": "Admin", "name": "Admin", "description": "Full access to User Management, Task Management, and Approval" },
+    { "id": "Direktur", "name": "Direktur", "description": "Can create tasks and approve tasks at director level" },
+    { "id": "Head of Division", "name": "Head of Division", "description": "Can create tasks and approve tasks at director level" },
+    { "id": "Manager", "name": "Manager", "description": "Can create tasks and approve tasks for division staff" },
+    { "id": "Leader", "name": "Leader", "description": "Can create tasks and approve tasks for division staff" },
+    { "id": "Staff", "name": "Staff", "description": "Can create tasks and view own tasks" }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "apiKeys": [
+    {
+      "key": "ak_live_7f8c9b2e1d0a4f5g6h7j8k9l",
+      "clientName": "External Approval Integration Client",
+      "roles": ["Admin"],
+      "enabled": true
+    },
+    {
+      "key": "ak_test_demo_system_integration_key_2025",
+      "clientName": "Test Client System",
+      "roles": ["Staff"],
+      "enabled": true
+    }
+  ]
+}

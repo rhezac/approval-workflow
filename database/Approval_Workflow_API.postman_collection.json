@@ -1,0 +1,632 @@
+{
+  "info": {
+    "_postman_id": "approval-workflow-collection-v1",
+    "name": "Enterprise Approval Workflow API",
+    "description": "Comprehensive Postman Collection for Enterprise Approval Workflow API.\nIncludes Auth, User Management, Workflows, Multi-Level & Logic OR Approvals, Delegations, and Revisions.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "ak_live_enterprise_flow_7829104812",
+      "type": "string"
+    },
+    {
+      "key": "taskId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "workflowId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "delegationId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "createdUserId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Health & Reference Data",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Get Combobox Options (Roles & Divisions)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/combobox",
+              "host": ["{{baseUrl}}"],
+              "path": ["combobox"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Authentication",
+      "item": [
+        {
+          "name": "Login - Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Admin@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login - Manager IT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"manager_it\",\n  \"password\": \"Admin@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login - Staff Finance",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"staff_fin\",\n  \"password\": \"Admin@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. User Management",
+      "item": [
+        {
+          "name": "List Users (with Autocomplete Search)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users?search=manager&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"],
+              "query": [
+                { "key": "search", "value": "manager" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create New User (Head / Leader / Operations)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('createdUserId', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"head_ops\",\n  \"fullName\": \"Hendro Head Operations\",\n  \"password\": \"Admin@123\",\n  \"role\": \"Head of Division\",\n  \"division\": \"Operation\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Hendro Head of Operations Senior\",\n  \"role\": \"Head of Division\",\n  \"division\": \"Operation\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{createdUserId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{createdUserId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Workflow Configuration",
+      "item": [
+        {
+          "name": "List All Workflows",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/workflows",
+              "host": ["{{baseUrl}}"],
+              "path": ["workflows"]
+            }
+          }
+        },
+        {
+          "name": "Create Multi-Level Workflow with Logic OR",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('workflowId', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Enterprise 2-Level Multi-Approver Workflow\",\n  \"description\": \"Level 1 requires Manager IT AND (Staff Finance OR Manager Finance). Level 2 requires Direktur.\",\n  \"steps\": [\n    {\n      \"stepOrder\": 1,\n      \"name\": \"Level 1: Leads & Multi Reviewers\",\n      \"approverUnits\": [\n        {\n          \"id\": \"u-1-1\",\n          \"type\": \"ROLE_DIVISION\",\n          \"label\": \"Manager IT\",\n          \"roleRequired\": \"Manager\",\n          \"divisionRequired\": \"IT\"\n        },\n        {\n          \"id\": \"u-1-2\",\n          \"type\": \"MULTI_USER_OPTION\",\n          \"label\": \"Finance Approval (Logic OR)\",\n          \"userIds\": [\n            \"a0000000-0000-0000-0000-000000000007\",\n            \"a0000000-0000-0000-0000-000000000004\"\n          ]\n        }\n      ]\n    },\n    {\n      \"stepOrder\": 2,\n      \"name\": \"Level 2: Final Director Sign-off\",\n      \"approverUnits\": [\n        {\n          \"id\": \"u-2-1\",\n          \"type\": \"ROLE_DIVISION\",\n          \"label\": \"Direktur Approval\",\n          \"roleRequired\": \"Direktur\",\n          \"divisionRequired\": \"ANY\"\n        }\n      ]\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/workflows",
+              "host": ["{{baseUrl}}"],
+              "path": ["workflows"]
+            }
+          }
+        },
+        {
+          "name": "Get Workflow By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/workflows/{{workflowId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["workflows", "{{workflowId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Task Management & Approval Execution",
+      "item": [
+        {
+          "name": "Create Task with Attachments & Notes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('taskId', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Procurement for Server Hardware Q3\",\n  \"description\": \"Requesting upgrade for data center clusters.\",\n  \"priority\": \"HIGH\",\n  \"division\": \"IT\",\n  \"workflowId\": \"{{workflowId}}\",\n  \"notes\": \"Urgent deployment needed.\",\n  \"attachments\": [\n    {\n      \"id\": \"att-link-1\",\n      \"name\": \"Vendor Specification Sheet\",\n      \"url\": \"https://vendor.example.com/spec-sheet.pdf\",\n      \"type\": \"link\",\n      \"notes\": \"Official hardware specification link\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"]
+            }
+          }
+        },
+        {
+          "name": "Get Task Details (Progression & Histories)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}"]
+            }
+          }
+        },
+        {
+          "name": "Process Decision: APPROVE (Stage Progression)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"decision\": \"APPROVED\",\n  \"notes\": \"Hardware budget verified and approved.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}/approval",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}", "approval"]
+            }
+          }
+        },
+        {
+          "name": "Process Decision: REVISION (Need Changes)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"decision\": \"REVISION\",\n  \"notes\": \"Please attach comparison quote from secondary vendor.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}/approval",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}", "approval"]
+            }
+          }
+        },
+        {
+          "name": "Submit Task Revision (Staff / Creator)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Procurement for Server Hardware Q3 (Revised)\",\n  \"description\": \"Added secondary quote as requested.\",\n  \"priority\": \"HIGH\",\n  \"revisionNotes\": \"Updated pricing quote attached.\",\n  \"attachments\": [\n    {\n      \"id\": \"att-link-2\",\n      \"name\": \"Secondary Vendor Quote\",\n      \"url\": \"https://vendor-alt.example.com/quote.pdf\",\n      \"type\": \"link\",\n      \"notes\": \"Competitive pricing comparison\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}/revision",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}", "revision"]
+            }
+          }
+        },
+        {
+          "name": "Cancel Task",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Budget allocated to next fiscal quarter.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}", "cancel"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Approval Delegations",
+      "item": [
+        {
+          "name": "Get Same-Role Delegation Candidates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tasks/delegates/candidates",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "delegates", "candidates"]
+            }
+          }
+        },
+        {
+          "name": "Create Delegation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set('delegationId', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"delegateeId\": \"a0000000-0000-0000-0000-000000000004\",\n  \"startDate\": \"2026-08-30\",\n  \"endDate\": \"2026-09-10\",\n  \"reason\": \"Annual Leave\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/delegations",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "delegations"]
+            }
+          }
+        },
+        {
+          "name": "List Delegations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tasks/delegations",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "delegations"]
+            }
+          }
+        },
+        {
+          "name": "Revoke / Deactivate Delegation",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tasks/delegations/{{delegationId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "delegations", "{{delegationId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. API Key Integration (External System)",
+      "item": [
+        {
+          "name": "Query Tasks using x-api-key",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
