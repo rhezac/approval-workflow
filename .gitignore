@@ -1,6 +1,28 @@
+# Logs
 *.log
-.pi/
-backend/dist/
-frontend/dist/
+logs/
+backend/logs/
+backend/uploads/
+
+# Environment
+backend/.env
+
+# Dependencies
+node_modules/
 backend/node_modules/
 frontend/node_modules/
+
+# Build artifacts
+dist/
+backend/dist/
+frontend/dist/
+
+# Pi harness
+.pi/
+.pi-workflow/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
