@@ -1,5 +1,5 @@
 @echo off
-set KARATE_VERSION=1.4.1
+set KARATE_VERSION=1.5.1
 set JAR_NAME=karate-%KARATE_VERSION%.jar
 
 if not exist "%~dp0karate-standalone\%JAR_NAME%" (
@@ -9,8 +9,8 @@ if not exist "%~dp0karate-standalone\%JAR_NAME%" (
 
 if "%~1"=="" (
     echo [INFO] Running all Karate test suites...
-    java -jar "%~dp0karate-standalone\%JAR_NAME%" "%~dp0features" -o "%~dp0reports"
+    java -jar "%~dp0karate-standalone\%JAR_NAME%" -T 1 "%~dp0features" -o "%~dp0reports"
 ) else (
     echo [INFO] Running feature: %1
-    java -jar "%~dp0karate-standalone\%JAR_NAME%" "%~dp0features\%1" -o "%~dp0reports"
+    java -jar "%~dp0karate-standalone\%JAR_NAME%" -T 1 "%~dp0features\%1" -o "%~dp0reports"
 )

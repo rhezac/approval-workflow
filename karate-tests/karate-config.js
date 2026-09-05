@@ -1,5 +1,5 @@
 function fn() {
-  var env = karate.env; // get system property 'karate.env'
+  var env = karate.env;
   karate.log('karate.env system property was:', env);
   
   if (!env) {
@@ -8,7 +8,7 @@ function fn() {
   
   var config = {
     baseUrl: 'http://localhost:3000/api',
-    apiKey: 'ak_live_enterprise_flow_7829104812',
+    apiKey: 'ak_live_7f8c9b2e1d0a4f5g6h7j8k9l',
     credentials: {
       admin: { username: 'admin', password: 'Admin@123' },
       director: { username: 'direktur', password: 'Admin@123' },

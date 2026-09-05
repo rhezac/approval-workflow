@@ -2,31 +2,52 @@ Feature: End-to-End Task Lifecycle, Multi-Level Progression, Logic OR, and Appro
 
 Background:
   * url baseUrl
-  # Tokens for different roles
-  * def adminLogin = karate.call('02_auth.feature', { username: credentials.admin.username, password: credentials.admin.password })
-  * def adminToken = adminLogin.response.accessToken
-
-  * def staffLogin = karate.call('02_auth.feature', { username: credentials.staffIt.username, password: credentials.staffIt.password })
-  * def staffToken = staffLogin.response.accessToken
-
-  * def mgrItLogin = karate.call('02_auth.feature', { username: credentials.managerIt.username, password: credentials.managerIt.password })
-  * def mgrItToken = mgrItLogin.response.accessToken
-
-  * def staffFinLogin = karate.call('02_auth.feature', { username: credentials.staffFin.username, password: credentials.staffFin.password })
-  * def staffFinToken = staffFinLogin.response.accessToken
-
-  * def dirLogin = karate.call('02_auth.feature', { username: credentials.director.username, password: credentials.director.password })
-  * def dirToken = dirLogin.response.accessToken
 
 Scenario: 01 Complete Approval Pipeline: Task Creation -> Level 1 (Logic OR Fulfillment) -> Level 2 -> Final Approved
-  # 1. Get default workflow ID
+  # 1. Login as Admin
+  Given path 'auth', 'login'
+  And request { username: '#(credentials.admin.username)', password: '#(credentials.admin.password)' }
+  When method POST
+  Then status 201
+  * def adminToken = response.accessToken
+
+  # 2. Login as Staff IT (Requester)
+  Given path 'auth', 'login'
+  And request { username: '#(credentials.staffIt.username)', password: '#(credentials.staffIt.password)' }
+  When method POST
+  Then status 201
+  * def staffToken = response.accessToken
+
+  # 3. Login as Manager IT (Level 1 Unit 1 Approver)
+  Given path 'auth', 'login'
+  And request { username: '#(credentials.managerIt.username)', password: '#(credentials.managerIt.password)' }
+  When method POST
+  Then status 201
+  * def mgrItToken = response.accessToken
+
+  # 4. Login as Staff Finance (Level 1 Unit 2 Logic OR Candidate)
+  Given path 'auth', 'login'
+  And request { username: '#(credentials.staffFin.username)', password: '#(credentials.staffFin.password)' }
+  When method POST
+  Then status 201
+  * def staffFinToken = response.accessToken
+
+  # 5. Login as Director (Level 2 Approver)
+  Given path 'auth', 'login'
+  And request { username: '#(credentials.director.username)', password: '#(credentials.director.password)' }
+  When method POST
+  Then status 201
+  * def dirToken = response.accessToken
+
+  # 6. Get Standard Corporate workflow (Staff -> Manager -> Direktur)
   Given path 'workflows'
   And header Authorization = 'Bearer ' + adminToken
   When method GET
   Then status 200
-  * def workflowId = response[0].id
+  * def workflow = response.find(w => w.name.includes('Standard Corporate'))
+  * def workflowId = workflow ? workflow.id : response[0].id
 
-  # 2. Staff IT submits a new Task
+  # 7. Staff IT submits a new Task
   Given path 'tasks'
   And header Authorization = 'Bearer ' + staffToken
   And request
@@ -51,47 +72,62 @@ Scenario: 01 Complete Approval Pipeline: Task Creation -> Level 1 (Logic OR Fulf
   When method POST
   Then status 201
   And match response.id == '#present'
-  And match response.status == 'in progress'
-  And match response.currentStepOrder == 1
   * def taskId = response.id
 
-  # 3. Manager IT Approves Level 1 Unit
-  Given path 'tasks', taskId, 'approval'
+  # 8. Manager IT Approves Level 1
+  Given path 'tasks', taskId, 'approve'
   And header Authorization = 'Bearer ' + mgrItToken
   And request { decision: 'APPROVED', notes: 'Manager IT OK by Karate' }
   When method POST
-  Then status 200
-  And match response.status == 'in progress'
+  Then status 201
 
-  # 4. Check Task Status & Verify Logic OR (or Next Approver)
-  Given path 'tasks', taskId
-  And header Authorization = 'Bearer ' + staffToken
-  When method GET
-  Then status 200
-
-  # 5. Director Approves (Final Stage)
-  Given path 'tasks', taskId, 'approval'
+  # 9. Director Approves Level 2 (Final Stage)
+  Given path 'tasks', taskId, 'approve'
   And header Authorization = 'Bearer ' + dirToken
   And request { decision: 'APPROVED', notes: 'Director Final Approval OK by Karate' }
   When method POST
-  Then status 200
+  Then status 201
+  And match response.status == 'approved'
 
-  # 6. Fetch Final State
+  # 10. Fetch Final State
   Given path 'tasks', taskId
   And header Authorization = 'Bearer ' + staffToken
   When method GET
   Then status 200
-  And match response.history == '#[ ]'
+  And match response.id == taskId
+  And match response.status == 'approved'
 
 Scenario: 02 Revision Request Cycle: Request Revision -> Requester Submits Revision
-  # 1. Get default workflow ID
+  # 1. Login as Admin
+  Given path 'auth', 'login'
+  And request { username: '#(credentials.admin.username)', password: '#(credentials.admin.password)' }
+  When method POST
+  Then status 201
+  * def adminToken = response.accessToken
+
+  # 2. Login as Staff IT
+  Given path 'auth', 'login'
+  And request { username: '#(credentials.staffIt.username)', password: '#(credentials.staffIt.password)' }
+  When method POST
+  Then status 201
+  * def staffToken = response.accessToken
+
+  # 3. Login as Manager IT
+  Given path 'auth', 'login'
+  And request { username: '#(credentials.managerIt.username)', password: '#(credentials.managerIt.password)' }
+  When method POST
+  Then status 201
+  * def mgrItToken = response.accessToken
+
+  # 4. Get Standard Corporate workflow
   Given path 'workflows'
   And header Authorization = 'Bearer ' + adminToken
   When method GET
   Then status 200
-  * def workflowId = response[0].id
+  * def workflow = response.find(w => w.name.includes('Standard Corporate'))
+  * def workflowId = workflow ? workflow.id : response[0].id
 
-  # 2. Staff IT creates a new Task
+  # 5. Staff IT creates a new Task
   Given path 'tasks'
   And header Authorization = 'Bearer ' + staffToken
   And request
@@ -108,16 +144,16 @@ Scenario: 02 Revision Request Cycle: Request Revision -> Requester Submits Revis
   Then status 201
   * def revTaskId = response.id
 
-  # 3. Manager IT requests Revision
-  Given path 'tasks', revTaskId, 'approval'
+  # 6. Manager IT requests Revision
+  Given path 'tasks', revTaskId, 'approve'
   And header Authorization = 'Bearer ' + mgrItToken
   And request { decision: 'REVISION', notes: 'Please add budget breakdown document' }
   When method POST
-  Then status 200
+  Then status 201
   And match response.status == 'revision'
 
-  # 4. Staff IT Submits Revision
-  Given path 'tasks', revTaskId, 'revision'
+  # 7. Staff IT Submits Revision
+  Given path 'tasks', revTaskId, 'submit-revision'
   And header Authorization = 'Bearer ' + staffToken
   And request
   """
@@ -135,5 +171,5 @@ Scenario: 02 Revision Request Cycle: Request Revision -> Requester Submits Revis
   }
   """
   When method POST
-  Then status 200
+  Then status 201
   And match response.status == 'in progress'

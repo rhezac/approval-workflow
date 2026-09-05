@@ -2,16 +2,18 @@ Feature: User Management, RBAC, and Autocompletion Search
 
 Background:
   * url baseUrl
-  # Helper: Login as Admin
-  * def adminLogin = call read('classpath:features/02_auth.feature@name=01') { username: '#(credentials.admin.username)', password: '#(credentials.admin.password)' }
-  * def adminToken = adminLogin.response.accessToken
+  Given path 'auth', 'login'
+  And request { username: '#(credentials.admin.username)', password: '#(credentials.admin.password)' }
+  When method POST
+  Then status 201
+  * def adminToken = response.accessToken
 
 Scenario: 01 Get All Users with Admin Token
   Given path 'users'
   And header Authorization = 'Bearer ' + adminToken
   When method GET
   Then status 200
-  And match response == '#[ ]'
+  And match response == '#[]'
   And match response[*].username contains 'admin'
 
 Scenario: 02 Search User by Full Name / Username with Autocomplete Limit
@@ -21,7 +23,7 @@ Scenario: 02 Search User by Full Name / Username with Autocomplete Limit
   And param limit = 5
   When method GET
   Then status 200
-  And match response == '#[ ]'
+  And match response == '#[]'
   And match response[0].fullName contains 'Irwan'
   And match response[0].role == 'Manager'
 
