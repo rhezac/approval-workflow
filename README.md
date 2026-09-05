@@ -14,6 +14,7 @@ A Multi-Level Approval Workflow Engine and Centralized Governance Platform built
 7. [How to Configure Approval Workflows in the UI](#7-how-to-configure-approval-workflows-in-the-ui)
 8. [Integrating 3rd-Party Applications as a Centralized Approval Hub](#8-integrating-3rd-party-applications-as-a-centralized-approval-hub)
 9. [Automated Unit Testing & Quality Assurance](#9-automated-unit-testing--quality-assurance)
+10. [Karate Automated API & E2E Testing](#10-karate-automated-api--e2e-testing)
 
 ---
 
@@ -97,6 +98,18 @@ approval-workflow/
 │   ├── 03_seed_data.sql                       # SQL to insert seed users & default workflows
 │   ├── schema_and_seed.sql                    # All-In-One SQL Script
 │   └── Approval_Workflow_API.postman_collection.json # Ready-to-use Postman Collection
+├── karate-tests/                              # Karate Automated E2E Testing Suite
+│   ├── pom.xml                                # Maven configuration for Karate
+│   ├── karate-config.js                       # Karate global environment & credentials config
+│   ├── run-karate.bat                         # Standalone runner script for Windows
+│   ├── run-karate.sh                          # Standalone runner script for Linux / macOS
+│   └── features/                              # Cucumber / Gherkin Feature Test Scenarios
+│       ├── 01_health_and_combobox.feature     # Health check & reference metadata validation
+│       ├── 02_auth.feature                    # JWT & x-api-key authentication tests
+│       ├── 03_users.feature                   # User CRUD, RBAC & search autocompletion tests
+│       ├── 04_workflows.feature               # Multi-level & Logic OR workflow engine tests
+│       ├── 05_tasks_lifecycle.feature         # E2E approval progression & revision cycle
+│       └── 06_delegations.feature             # Same-role substitute delegation tests
 └── frontend/                                  # React (Vite + Tailwind CSS + TypeScript)
     ├── package.json
     ├── tailwind.config.js
@@ -394,3 +407,54 @@ Test Suites: 5 passed, 5 total
 Tests:       33 passed, 33 total
 Snapshots:   0 total
 ```
+
+---
+
+## <a id="10-karate-automated-api--e2e-testing"></a> 🥋 10. Karate Automated API & E2E Testing
+
+The project includes an end-to-end automated testing suite powered by **[Karate Framework](https://github.com/karatelabs/karate)** to validate all domain business rules, authentication schemes, multi-level logic OR approvals, and delegations.
+
+### 📁 Karate Test Structure (`karate-tests/`):
+- `features/01_health_and_combobox.feature`: Health check endpoint and dynamic reference data.
+- `features/02_auth.feature`: JWT login verification, invalid credential handling, and `x-api-key` validation.
+- `features/03_users.feature`: User list retrieval, autocomplete search with debounce limits, and new user creation.
+- `features/04_workflows.feature`: Blueprint workflow configuration with sequential levels and multi-user choice (Logic OR) units.
+- `features/05_tasks_lifecycle.feature`: Full end-to-end task submission, multi-level progression, atomic candidate fulfillment, and revision request/resubmission cycles.
+- `features/06_delegations.feature`: Same-role approver delegation creation, listing, and deactivation.
+
+---
+
+### 🚀 How to Run Karate Automated Tests:
+
+#### Option A: Quick Standalone Runner (No Maven Required)
+The test suite includes runner scripts that automatically download the official Karate Standalone JAR and execute all feature suites:
+
+- **On Windows**:
+  ```cmd
+  cd karate-tests
+  run-karate.bat
+  ```
+
+- **On Linux / macOS / Git Bash**:
+  ```bash
+  cd karate-tests
+  chmod +x run-karate.sh
+  ./run-karate.sh
+  ```
+
+- **Run a Specific Feature**:
+  ```cmd
+  run-karate.bat 05_tasks_lifecycle.feature
+  ```
+
+---
+
+#### Option B: Via Maven (Java / CI/CD Pipeline)
+```bash
+cd karate-tests
+mvn test
+```
+
+### 📊 HTML Test Reports:
+After running tests, Karate automatically generates an interactive HTML report at:
+👉 **`karate-tests/reports/karate-summary.html`** (or `karate-tests/target/karate-reports/karate-summary.html`).
